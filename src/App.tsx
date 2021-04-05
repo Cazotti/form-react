@@ -1,9 +1,19 @@
+import { Component } from 'react';
+import { Container, Typography } from '@material-ui/core';
+
+import RegistrationForm from './components/RegistrationForm/RegistrationForm';
+
 import './App.css';
 
-function App() {
-  return (
-    <h1>Formulário de Cadastro</h1>
-  );
+class App extends Component {
+  render () {
+    return (
+      <Container component="article" maxWidth="sm">
+        <Typography variant="h4" align="center">Formulário de Cadastro</Typography>
+        <RegistrationForm />
+      </Container>
+    );
+  }
 }
 
 export default App;
