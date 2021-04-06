@@ -1,70 +1,39 @@
-import { Button, FormControlLabel, Switch, TextField } from '@material-ui/core';
-import { useState } from 'react';
+import { Step, StepLabel, Stepper, Typography } from '@material-ui/core';
+import { useEffect, useState } from 'react';
 
-function RegistrationForm () {
-  const [cpf, setCpf] = useState("");
-  const [nome, setNome] = useState("");
-  const [sobrenome, setSobrenome] = useState("");
-  const [novidades, setNovidades] = useState(true);
-  const [promocoes, setPromocoes] = useState(true);
+import DadosEntregas from './DadosEntrega';
+import DadosPessoais from './DadosPessoais';
+import DadosUsuarios from './DadosUsuarios';
 
-  return (
-    <form onSubmit={event => { event.preventDefault() }}>
-      <TextField
-        value={nome}
-        onChange={event => { setNome(event.target.value) }}
-        id="nome" label="Nome"
-        variant="outlined"
-        margin="normal"
-        fullWidth
-      />
-      <TextField
-        value={sobrenome}
-        onChange={event => { setSobrenome(event.target.value) }}
-        id="sobrenome"
-        label="Sobrenome"
-        variant="outlined"
-        margin="normal"
-        fullWidth
-      />
-      <TextField
-        value={cpf}
-        onChange={event => {
-          setCpf(event.target.value);
-        }}
-        id="cpf"
-        label="CPF"
-        variant="outlined"
-        margin="normal"
-        fullWidth
-      />
-      <FormControlLabel
-        label="Promoções"
-        control={
-          <Switch
-            name="Promoção"
-            onChange={event => { setPromocoes(event.target.checked) }}
-            color="primary"
-            checked={promocoes}
-            defaultChecked={promocoes}
-          />
-        }
-      />
-      <FormControlLabel
-        label="Novidades"
-        control={
-          <Switch
-            name="Novidades"
-            onChange={event => { setNovidades(event.target.checked) }}
-            color="primary"
-            checked={novidades}
-            defaultChecked={novidades}
-          />
-        }
-      />
-      <Button type="submit" variant="contained" color="primary">Cadastrar</Button>
-    </form>
-  );
+function RegistrationForm ({ aoEnviar }:any) {
+  const [etapa, setEtapa] = useState(0);
+  const [dados, setDados] = useState({});
+
+  useEffect(() => {
+    if(etapa === forms.length-1) { aoEnviar(dados); }
+  })
+
+  function coletarDados (novosDados:Array<String>) {
+    setDados({...dados, ...novosDados})
+    setEtapa(etapa + 1);
+  }
+
+  const forms = [
+    <DadosUsuarios aoEnviar={coletarDados}/>,
+    <DadosPessoais aoEnviar={coletarDados}/>,
+    <DadosEntregas aoEnviar={coletarDados}/>,
+    <Typography variant="h5" align="center" >Obrigado pelo Cadastro!</Typography>,
+  ]
+
+  return (<>
+    <Stepper activeStep={etapa}>
+      <Step><StepLabel>Login</StepLabel></Step>
+      <Step><StepLabel>Pessoal</StepLabel></Step>
+      <Step><StepLabel>Entrega</StepLabel></Step>
+      <Step><StepLabel>Finalização</StepLabel></Step>
+    </Stepper>
+    {forms[etapa]}
+  </>);
 }
 
 export default RegistrationForm;
